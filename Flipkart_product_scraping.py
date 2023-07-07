@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[3]:
+
+
+from openpyxl.workbook import Workbook
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+
+
+# In[2]:
+
+
+get_ipython().system('pip install openpyxl')
+
+
+# In[15]:
+
+
+
+
+Product_Name=[]
+Price=[]
+Descriptions=[]
+Review=[]
+Stars=[]
+
+#np=soup.find("a",class_="_1LKTO3").get("href")
+
+for i in range(2,12):
+  url="https://www.flipkart.com/search?q=mobiles&sid=tyy%2C4io&as=on&as-show=on&otracker=AS_QueryStore_OrganicAutoSuggest_1_5_na_na_na&otracker1=AS_QueryStore_OrganicAutoSuggest_1_5_na_na_na&as-pos=1&as-type=RECENT&suggestionId=mobiles%7CMobiles&requestId=c69d9418-fefb-4eb0-8bf2-5472f6b6e269&as-searchtext=mobil"+str(i)      
+  
+  r=requests.get(url)
+
+  soup=BeautifulSoup(r.text,"lxml")
+  box=soup.find("div",class_="_1YokD2 _3Mn1Gg")
+
+  names= box.find_all("div",class_="_4rR01T")
+  for i in names:
+    pnames=i.text
+    Product_Name.append(pnames)
+  #print(Product_Name)
+  #print(len(Product_Name))
+
+  prices=box.find_all("div",class_="_30jeq3 _1_WHN1")
+  for i in prices:
+    pr=i.text
+    Price.append(pr)
+  #print(Price)
+  #print(len(Price))
+
+  desc=box.find_all("div",class_="fMghEO")
+  for i in desc:
+    des=i.text
+    Descriptions.append(des)
+  #print(Descriptions)
+  #print(len(Descriptions))
+
+  rev=box.find_all("span",class_="_2_R_DZ")
+  for i in rev:
+    revv=i.text
+    Review.append(revv)
+    
+    #print(Review)
+  #print(len(Review))
+    
+  sta=box.find_all("div",class_="_3LWZlK")
+  for i in rat:
+    star=i.text
+    Stars.append(star)
+        
+  #print(Ratings)
+  #print(len(Ratings))
+
+
+
+df= pd.DataFrame({"Product Name":Product_Name,"Prices":Price,"Description":Descriptions ,"Reviews":Review, "Stars":Stars})
+
+print(df)
+
+file_name="Flipkart.csv"
+df.to_csv(file_name)
+
+
+# In[13]:
+
+
+df["Reviews"]
+
+
+# In[ ]:
+
+
+
+
